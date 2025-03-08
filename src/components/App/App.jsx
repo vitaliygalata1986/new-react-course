@@ -6,7 +6,7 @@ function App() {
   const name = 'Vitaliy';
   const text = <h1 style={{ color: 'red', fontSize: 20 }}>{name}</h1>;
   const condition = true; // true or false // null
-  const test = null;
+  const test = true;
   return (
     condition && (
       <>
