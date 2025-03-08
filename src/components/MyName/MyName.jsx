@@ -1,5 +1,12 @@
 import './MyName.css';
 function MyName() {
-  return <h2>MyName Vitaliy</h2>;
+  const cats = ['Лев', 'Тигр', 'Волк'];
+  return (
+    <ul>
+      {cats.map((cat) => (
+        <li>{cat}</li>
+      ))}
+    </ul>
+  );
 }
 export default MyName;
