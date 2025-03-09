@@ -1,21 +1,15 @@
-import Email from '../Email/Email';
-import MyName from '../MyName/MyName';
+import Header from '../Header/Header';
+import HomePage from '../../pages/HomePage';
+import { Footer } from '../Footer/Footer';
 import './App.css';
 
 function App() {
-  const name = 'Vitaliy';
-  const text = <h1 style={{ color: 'red', fontSize: 20 }}>{name}</h1>;
-  const condition = true; // true or false // null
-  const test = true;
   return (
-    condition && (
-      <>
-        <div>My Component {text}</div>
-        {test && <MyName />}
-        <Email />
-        <input type='checkbox' checked={false} />
-      </>
-    )
+    <main className='app'>
+      <Header />
+      <HomePage />
+      <Footer />
+    </main>
   );
 }
 
