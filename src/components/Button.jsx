@@ -1,6 +1,7 @@
-export function Button() {
-  const handleClick = () => {
-    alert('меня нажали');
-  };
-  return <button onClick={handleClick}>Кнопка</button>;
+export function Button({ label = 'Заглушка', callback, btnStyles }) {
+  return (
+    <button style={btnStyles} onClick={callback}>
+      {label}
+    </button>
+  );
 }
