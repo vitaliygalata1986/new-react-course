@@ -1,9 +1,14 @@
 import './Footer.css';
 
-export function Footer() {
+export function Footer({ isDarkMode, text, setText }) {
+  const handleChange = (e) => setText(e.target.value);
   return (
-    <footer className='footer'>
+    <footer
+      style={{ backgroundColor: isDarkMode ? 'red' : 'black' }}
+      className='footer'
+    >
       <p>Подвал сайта</p>
+      <input type='text' value={text} onChange={handleChange} />
     </footer>
   );
 }
