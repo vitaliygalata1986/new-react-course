@@ -4,6 +4,9 @@ import { Footer } from '../Footer/Footer';
 import { useState } from 'react';
 import './App.css';
 import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import Counter from '../Counter/Counter';
+import UserProfile from '../UserProfile/UserProfile';
+import ParentComponent from '../ParentComponent/ParentComponent';
 
 function App() {
   const [clicks, setClicks] = useState(0);
@@ -15,6 +18,9 @@ function App() {
       <HomePage clicks={clicks} setClicks={setClicks} />
       <ThemeToggle isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       <Footer isDarkMode={isDarkMode} text={text} setText={setText} />
+      <Counter />
+      <UserProfile />
+      <ParentComponent />
     </main>
   );
 }
