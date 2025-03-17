@@ -9,18 +9,13 @@ import UserProfile from '../UserProfile/UserProfile';
 import ParentComponent from '../ParentComponent/ParentComponent';
 
 function App() {
-  const [clicks, setClicks] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState('false');
-  const [text, setText] = useState('Dafault text');
+  const handleClick = () => {
+    alert('message');
+  };
+
   return (
-    <main className='app'>
-      <Header clicks={clicks} text={text} />
-      <HomePage clicks={clicks} setClicks={setClicks} />
-      <ThemeToggle isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-      <Footer isDarkMode={isDarkMode} text={text} setText={setText} />
-      <Counter />
-      <UserProfile />
-      <ParentComponent />
+    <main className="app">
+      <HomePage message={'text'} handlePropsClick={handleClick} />
     </main>
   );
 }
