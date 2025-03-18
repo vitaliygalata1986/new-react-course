@@ -1,102 +1,32 @@
-import { Children, useState } from 'react';
-import { Button } from '../components/Button';
-import { UserList } from '../components/UserList';
-
+import Greeting from './Greeting';
+import Notification from './Notification';
+import UserProfile from './UserProfile';
+import TodoList from './TodoList';
+import WelcomeMessage from './WelcomeMessage';
 import './HomePage.css';
 
 function HomePage({ handlePropsClick }) {
-  const [text, setText] = useState('');
-  const [value, setValue] = useState('');
-  function handleSubmit(event) {
-    event.preventDefault();
-    alert('Fom is submitted');
-  }
-  function handleChange(event) {
-    setText(event.target.value);
-  }
-  function handleMouseOver() {
-    console.log('Mouse over');
-  }
-  function handleMouseOut() {
-    console.log('Mouse out');
-  }
-  function handleFocus() {
-    console.log('Field on focus');
-  }
-  function handleBlur() {
-    console.log('Field on blur');
-  }
-  function handleScroll(event) {
-    console.log('Прокрутка', event.target.scrollTop);
-  }
-  function handleLoad() {
-    console.log('Изображение загружено');
-  }
-  function handleError() {
-    console.log('Ошибка загрузки изображения');
-  }
-  function handleKeyDown(event) {
-    if (event.key === 'Enter') {
-      console.log('Вы нажали', event.key);
-    }
-  }
-  function handleChangeNew(event) {
-    setValue(event.target.value);
-  }
-  function handleBtnClick() {
-    console.log(value);
-  }
-  function handleEvent(event) {
-    switch (event.type) {
-      case 'click':
-        console.log('click');
-        break;
-      case 'mouseenter':
-        console.log('mouseenter');
-        break;
-      default:
-        break;
-    }
-  }
+  const messages = [1, 2, 3, 4, 5];
+  const user = {
+    name: 'Иван',
+    age: 30,
+  };
+  const todos = [
+    { id: 1, name: 'Stydy React', isDone: true },
+    { id: 2, name: 'Stydy JS', isDone: true },
+    { id: 3, name: 'Stydy VUE JS', isDone: false },
+  ];
+  const isLoggedIn = true;
   return (
-    <div
-      className="home-page"
-      onScroll={handleScroll}
-      style={{ height: '300px', overflow: 'auto' }}
-    >
-      <Button label="Counter" callback={handlePropsClick} />
-      <input
-        type="text"
-        onChange={handleChange}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
-      <p>Вы ввели: {text}</p>
-      <form onSubmit={handleSubmit}>
-        <Button type="submit" label="Submit" />
-      </form>
-      <button onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
-        Button
-      </button>
-      <div style={{ height: '900px' }}>Прокручиваемый элемент</div>
-      <img
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBgCPQmyPHrOWxnUvbmQIRwOipjW8woZUreA&s"
-        alt="рисунок"
-        onLoad={handleLoad}
-        onError={handleError}
-      />
-      <input
-        type="text"
-        value={value}
-        onChange={handleChangeNew}
-        onKeyDown={handleKeyDown}
-        placeholder='Input text and press "Enter"'
-      />
-      <p>Вы ввели: {value}</p>
-
-      <button onClick={handleEvent} onMouseEnter={handleEvent}>
-        Нажми или наведи
-      </button>
+    <div>
+      <Greeting isLoggedIn={true} />
+      <Greeting isLoggedIn={false} />
+      <Notification messages={messages} />
+      <Notification messages={[]} />
+      <UserProfile user={user} />
+      <UserProfile user={null} />
+      <TodoList todos={todos} />
+      <WelcomeMessage isLoggedIn={isLoggedIn} />
     </div>
   );
 }
