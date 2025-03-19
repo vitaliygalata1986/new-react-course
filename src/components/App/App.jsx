@@ -15,7 +15,7 @@ function App() {
 
   return (
     <main className="app">
-      <HomePage message={'text'} handlePropsClick={handleClick} />
+      <HomePage />
     </main>
   );
 }

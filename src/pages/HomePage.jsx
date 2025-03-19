@@ -1,32 +1,35 @@
-import Greeting from './Greeting';
-import Notification from './Notification';
-import UserProfile from './UserProfile';
-import TodoList from './TodoList';
-import WelcomeMessage from './WelcomeMessage';
 import './HomePage.css';
+import UserList from './UserList';
+import { Task } from './Task';
+import { Comments } from './Comments';
+import { Products } from './Products';
+import { v4 as uuidv4 } from 'uuid';
 
-function HomePage({ handlePropsClick }) {
-  const messages = [1, 2, 3, 4, 5];
-  const user = {
-    name: 'Иван',
-    age: 30,
-  };
-  const todos = [
-    { id: 1, name: 'Stydy React', isDone: true },
-    { id: 2, name: 'Stydy JS', isDone: true },
-    { id: 3, name: 'Stydy VUE JS', isDone: false },
+function HomePage() {
+  const numbers = [1, 2, 3, 4, 5];
+  const users = [
+    { id: 1, name: 'Ivan' },
+    { id: 2, name: 'Alice' },
+    { id: 3, name: 'IvJoban' },
   ];
-  const isLoggedIn = true;
+
+  /*
+  const listItems = numbers.map((number) => (
+    // <li key={number.toString()}>{number}</li>
+    <li key={uuidv4()}>
+      {number} - {uuidv4()}
+    </li>
+  ));
+  */
+  const userList = users.map((user) => <li key={user.id}>{user.name}</li>);
+
   return (
     <div>
-      <Greeting isLoggedIn={true} />
-      <Greeting isLoggedIn={false} />
-      <Notification messages={messages} />
-      <Notification messages={[]} />
-      <UserProfile user={user} />
-      <UserProfile user={null} />
-      <TodoList todos={todos} />
-      <WelcomeMessage isLoggedIn={isLoggedIn} />
+      <ul>{userList}</ul>
+      <UserList />
+      <Task />
+      <Comments />
+      <Products />
     </div>
   );
 }
