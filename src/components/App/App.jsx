@@ -7,6 +7,7 @@ import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import Counter from '../Counter/Counter';
 import UserProfile from '../UserProfile/UserProfile';
 import ParentComponent from '../ParentComponent/ParentComponent';
+import RegForm from '../RegForm/RegForm';
 
 function App() {
   const handleClick = () => {
@@ -15,7 +16,9 @@ function App() {
 
   return (
     <main className="app">
-      <HomePage />
+      <Header />
+      <RegForm />
+      <Footer />
     </main>
   );
 }

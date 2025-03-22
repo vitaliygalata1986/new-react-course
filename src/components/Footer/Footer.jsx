@@ -8,7 +8,6 @@ export function Footer({ isDarkMode, text, setText }) {
       className='footer'
     >
       <p>Подвал сайта</p>
-      <input type='text' value={text} onChange={handleChange} />
     </footer>
   );
 }
