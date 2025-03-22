@@ -4,13 +4,7 @@ import MixedForm from './MixedForm';
 import './HomePage.css';
 
 function HomePage() {
-  return (
-    <div>
-      <ControlledForm />
-      <UnControlledForm />
-      <MixedForm />
-    </div>
-  );
+  return <div></div>;
 }
 
 export default HomePage;
