@@ -8,6 +8,7 @@ import Counter from '../Counter/Counter';
 import UserProfile from '../UserProfile/UserProfile';
 import ParentComponent from '../ParentComponent/ParentComponent';
 import RegForm from '../RegForm/RegForm';
+import ReactHoockForm from '../../components/ReactHoockForm/ReactHoockForm';
 
 function App() {
   const handleClick = () => {
@@ -17,7 +18,7 @@ function App() {
   return (
     <main className="app">
       <Header />
-      <RegForm />
+      <ReactHoockForm />
       <Footer />
     </main>
   );
