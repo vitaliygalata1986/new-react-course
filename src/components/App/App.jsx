@@ -5,6 +5,7 @@ import { useState } from 'react';
 import './App.css';
 import Container from '../../components/Container/Container';
 import ModalPage from '../../components/Modal/ModalPage';
+import Child from '../../components/Child/Child';
 import {
   EnhancedComponent1,
   EnhancedComponent2,
@@ -12,22 +13,14 @@ import {
 } from '../EnhancedComponent';
 
 function App() {
+  const person = {
+    name: 'John',
+    age: 30,
+  };
   return (
     <main className="app">
       <Header />
-      <Container>
-        <h2>Это дочерний компонент</h2>
-      </Container>
-
-      <Container>
-        <h2>Это дочерний компонент 2</h2>
-      </Container>
-
-      <Container>
-        <h2>Это дочерний компонент 3</h2>
-      </Container>
-
-      <ModalPage />
+      <Child {...person} />
       <Footer />
     </main>
   );
