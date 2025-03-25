@@ -3,12 +3,8 @@ import Header from '../Header/Header';
 import { Footer } from '../Footer/Footer';
 import { useState } from 'react';
 import './App.css';
-// import ThemeToggle from '../ThemeToggle/ThemeToggle';
-// import Counter from '../Counter/Counter';
-// import UserProfile from '../UserProfile/UserProfile';
-// import ParentComponent from '../ParentComponent/ParentComponent';
-// import RegForm from '../RegForm/RegForm';
-// import ReactHoockForm from '../../components/ReactHoockForm/ReactHoockForm';
+import Container from '../../components/Container/Container';
+import ModalPage from '../../components/Modal/ModalPage';
 import {
   EnhancedComponent1,
   EnhancedComponent2,
@@ -19,9 +15,19 @@ function App() {
   return (
     <main className="app">
       <Header />
-      <EnhancedComponent1 />
-      <EnhancedComponent2 />
-      <EnhancedComponent3 />
+      <Container>
+        <h2>Это дочерний компонент</h2>
+      </Container>
+
+      <Container>
+        <h2>Это дочерний компонент 2</h2>
+      </Container>
+
+      <Container>
+        <h2>Это дочерний компонент 3</h2>
+      </Container>
+
+      <ModalPage />
       <Footer />
     </main>
   );
