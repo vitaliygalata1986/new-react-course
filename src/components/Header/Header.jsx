@@ -1,17 +1,12 @@
 import { Button } from '../Button';
 import './Header.css';
-function Header() {
-  const style = {
-    color: 'blue',
-    fontSize: '2rem',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  };
-
+function Header({ theme, toggleTheme }) {
   return (
-    <header className="container" style={style}>
+    <header className="header">
       <h1>Заголовок</h1>
+      <button onClick={toggleTheme} className="buttonSwitcher">
+        Переключить {theme === 'light' ? 'Dark' : 'Light'} тему
+      </button>
     </header>
   );
 }

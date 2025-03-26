@@ -1,26 +1,20 @@
-import Header from '../Header/Header';
-// import HomePage from '../../pages/HomePage';
-import { Footer } from '../Footer/Footer';
 import { useState } from 'react';
+import Header from '../Header/Header';
+import { Footer } from '../Footer/Footer';
 import './App.css';
-import Container from '../../components/Container/Container';
-import ModalPage from '../../components/Modal/ModalPage';
-import Child from '../../components/Child/Child';
-import {
-  EnhancedComponent1,
-  EnhancedComponent2,
-  EnhancedComponent3,
-} from '../EnhancedComponent';
+import HomePage from '../../pages/HomePage';
 
 function App() {
-  const person = {
-    name: 'John',
-    age: 30,
+  const [theme, setTheme] = useState('light'); // По умолчанию светлая тема
+
+  // Функция для переключения темы
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
   };
   return (
-    <main className="app">
-      <Header />
-      <Child {...person} />
+    <main className="app" data-theme={theme}>
+      <Header theme={theme} toggleTheme={toggleTheme} />
+      <HomePage />
       <Footer />
     </main>
   );

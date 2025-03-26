@@ -1,10 +1,8 @@
-import ControlledForm from '../components/ControlledForm/ControlledForm';
-import UnControlledForm from '../components/UnControlledForm/UnControlledForm';
-import MixedForm from './MixedForm';
+import Button from '../components/Button/Button';
 import './HomePage.css';
 
-function HomePage() {
-  return <div></div>;
-}
+const HomePage = () => {
+  return <Button />;
+};
 
 export default HomePage;

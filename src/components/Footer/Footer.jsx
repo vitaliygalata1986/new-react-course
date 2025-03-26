@@ -1,12 +1,9 @@
 import './Footer.css';
+import styles from './Footer.module.css';
 
-export function Footer({ isDarkMode, text, setText }) {
-  const handleChange = (e) => setText(e.target.value);
+export function Footer() {
   return (
-    <footer
-      style={{ backgroundColor: isDarkMode ? 'red' : 'black' }}
-      className='footer'
-    >
+    <footer className={`footer ${styles.footer}`}>
       <p>Подвал сайта</p>
     </footer>
   );
