@@ -1,6 +1,6 @@
-export function Button({ label = 'Заглушка', callback, btnStyles }) {
+export function Button({ label = 'Заглушка', callback, btnStyles, className }) {
   return (
-    <button style={btnStyles} onClick={callback}>
+    <button style={btnStyles} className={className} onClick={callback}>
       {label}
     </button>
   );
