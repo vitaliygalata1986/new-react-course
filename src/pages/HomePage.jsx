@@ -1,33 +1,39 @@
 import { useEffect, useState } from 'react';
-import DataFertchApi from '../components/DataFertchApi/DataFertchApi';
-import LifecycleDemo from '../components/LifecycleDemo/LifecycleDemo';
-import { Counter } from '../components/NewCounter/Counter';
-import Cleanup from '../components/Cleanup/Cleanup';
-import WindowSize from '../components/WindowSize/WindowSize';
+import NewChildComponent from '../components/NewChildComponent/NewChildComponent';
+import RefComponent from '../components/RefComponent/RefComponent';
+import RefComponentEffect from '../components/RefComponentEffect/RefComponentEffect';
+import NumberTracker from '../components/NumberTracker/NumberTracker';
+import UserComponent from '../components/UserComponent/UserComponent';
+import CustomVideoPlayer from '../components/CustomVideoPlayer/CustomVideoPlayer';
+import AdvancedAudioPlayer from '../components/AdvancedAudioPlayer/AdvancedAudioPlayer';
 
 const HomePage = () => {
-  const [showComponent, setShowComponent] = useState(true);
-  useEffect(() => {
-    // код, который выполняется после рендеринга
+  const [elementText, setElementText] = useState('');
 
-    // опциональный код для очистки
-    return () => {
-      // вовзращаемая функция, которая вызывается при размонтировании компонента
-      // или выполнении следующего эффекта
-    };
-  }, []); // [] - зависимости - определяет, когда повторно выполнять эффект, если массив пуст, то эффект выполнится только один раз после первого рендеринга
+  const handleClick = () => {
+    const element = document.getElementById('myElement');
+    setElementText(element.textContent);
+  };
 
   return (
-    <>
-      <DataFertchApi />
-      <Counter />
-      <button onClick={() => setShowComponent(!showComponent)}>
-        {showComponent ? 'Скрыть компонент' : 'Показать'}
-      </button>
-      {showComponent && <LifecycleDemo />}
-      <Cleanup />
-      <WindowSize />
-    </>
+    <div>
+      <div id="myElement">Это элемент с ID</div>
+      <button onClick={handleClick}>Получить текст элемента</button>
+      <p>Текст элемента {elementText}</p>
+      <p>............</p>
+      <NewChildComponent />
+      <RefComponent />
+      <p>............</p>
+      <RefComponentEffect />
+      <p>............</p>
+      <NumberTracker />
+      <p>............</p>
+      <UserComponent />
+      <p>............</p>
+      <CustomVideoPlayer />
+      <p>............</p>
+      <AdvancedAudioPlayer />
+    </div>
   );
 };
 
