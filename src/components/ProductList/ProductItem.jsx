@@ -1,10 +1,17 @@
 import { memo } from 'react';
 
-// благодаря memo этот компонент не будет перерендериваться
-// он будет перерендериваться только если зависимости изменились (name)
-export const ProductItem = memo(({ name }) => {
-  console.log('Меня рендерят');
-  return <li>{name}</li>;
+export const ProductItem = memo(({ products, onItemClick }) => {
+  console.log('Лист отрендерился снова');
+
+  return (
+    <ul>
+      {products.map((product) => (
+        <li key={product.id} onClick={() => onItemClick(product.id)}>
+          {product.name}
+        </li>
+      ))}
+    </ul>
+  );
 });
 
 export default ProductItem;

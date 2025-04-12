@@ -1,38 +1,22 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ProductItem } from './ProductItem';
 
 function ProductList({ products }) {
-  const [filteredList, setFilteredList] = useState('');
-  const [renderCount, setRenderCount] = useState(0);
+  const [count, setCount] = useState(0);
 
-  const filteredProducts = useMemo(() => {
-    return products.filter((product) => {
-      //  console.time('filter');
-      const result = product.name
-        .toLowerCase()
-        .includes(filteredList.toLowerCase());
-      // console.log('Меня вызывают');
-      //  console.timeEnd('filter');
-      return result;
-    });
-  }, [products, filteredList]); // зависимости useMemo (если зависимость изменилась, то useMemo будет пересоздан)
+  // useCallback сохраняет ту же ссылку на handleItemClick между рендерами (если зависимости не меняются),
+  // что предотвращает лишние ререндеры дочернего компонента, если он обёрнут в React.memo
+  // Используется для предотвращения лишних ререндеров ProductItem,
+  // так как функция передаётся в пропс и может вызвать ререндер при изменении ссылки
+
+  const handleItemClick = useCallback((id) => {
+    console.log('Item clicked at index', id);
+  }, []);
 
   return (
     <>
-      <input
-        type="text"
-        value={filteredList}
-        onChange={(e) => setFilteredList(e.target.value)}
-        placeholder="Поиск..."
-      />
-      <button onClick={() => setRenderCount(renderCount + 1)}>
-        Рендерить - {renderCount}
-      </button>
-      <ul>
-        {filteredProducts.map((product) => (
-          <ProductItem key={product.id} {...product} />
-        ))}
-      </ul>
+      <button onClick={() => setCount(count + 1)}>Рендерить - {count}</button>
+      <ProductItem onItemClick={handleItemClick} products={products} />
     </>
   );
 }
