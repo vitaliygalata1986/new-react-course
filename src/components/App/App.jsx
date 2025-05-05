@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { UserContext } from '../../contexts/UserContext';
+
 import Header from '../Header/Header';
-import { Footer } from '../Footer/Footer';
-import HomePage from '../../pages/HomePage';
-import { Button } from '../Button';
 
 function App() {
+  const user = {
+    name: 'Иван',
+    email: 'ivan@example.com',
+  };
   return (
     <main>
-      <Header />
-      <HomePage />
-      <Footer />
+      <UserContext.Provider value={user}>
+        <Header />
+      </UserContext.Provider>
     </main>
   );
 }
