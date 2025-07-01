@@ -8,7 +8,8 @@ export const checkPasswordMatch = (password, confirmPassword) => {
 };
 
 export const checkRequiredFields = (fields) => {
-  return fields.every((field) => field.trim()); // чтобы каждый элмен массива был не пустой
+  // return fields.every((field) => field.trim()); // чтобы каждый элмен массива был не пустой
+  return fields.every((field) => String(field).trim()); // привести все поля к строке в checkRequiredFields
 };
 
 // /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
@@ -24,4 +25,8 @@ export const checkRequiredFields = (fields) => {
 /*
     passwordRegex.test(password) — метод test() проверяет, соответствует ли переданный пароль этому регулярному выражению.
     Если пароль проходит проверку, возвращается true, иначе — false.
+*/
+
+/*
+  Проблема в том, что selectedYear — это число (например, 2012), и когда ты вызываешь .trim() на числе, это вызывает ошибку или возвращает undefined.
 */

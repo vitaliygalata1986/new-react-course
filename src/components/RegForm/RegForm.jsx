@@ -10,24 +10,63 @@ function RegForm() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isPasswordValid, setIsPasswordValid] = useState(true); // соответствует ли пароль требованиям валидации
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(true);
-  const [selectedYear, setSelectedYear] = useState(''); // выбранный год
+  const [selectedYear, setSelectedYear] = useState('');
   const [requiredFieldsError, setRequiredFieldsError] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+    setRequiredFieldsError(false);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setRequiredFieldsError(false);
+  };
+
+  const handlePasswordChange = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    setIsPasswordValid(validatePassword(newPassword));
+    setPasswordMatch(checkPasswordMatch(newPassword, confirmPassword));
+    setRequiredFieldsError(false);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    const newConfirmPassword = e.target.value;
+    setConfirmPassword(newConfirmPassword);
+    setPasswordMatch(checkPasswordMatch(password, newConfirmPassword));
+    setRequiredFieldsError(false);
+  };
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+    setRequiredFieldsError(false);
+  };
+
+  const years = Array.from(
+    { length: 40 },
+    (_, i) => new Date().getFullYear() - i
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const allFieldsField = checkRequiredFields([
+
+    const allFieldsFilled = checkRequiredFields([
       name,
       email,
       password,
       confirmPassword,
+      selectedYear,
     ]);
-    const isFormValid = allFieldsField && isPasswordValid && passwordMatch; // форма будет валидна, когда все поля заполнены и соответствуют требованиям валидации, а также совпадат пароли
 
-    // если форма не валидна, устанавливаем requiredFieldsError в true
+    const isFormValid = allFieldsFilled && isPasswordValid && passwordMatch;
+
+    console.log(allFieldsFilled); // false
+
     if (!isFormValid) {
       setRequiredFieldsError(true);
       setShowSuccessMessage(false);
@@ -52,31 +91,6 @@ function RegForm() {
     }, 3000);
   };
 
-  const handleNameChange = (e) => setName(e.target.value);
-
-  const handleEmailChange = (e) => setEmail(e.target.value);
-
-  const handlePasswordChange = (e) => {
-    const newPassword = e.target.value;
-    setPassword(newPassword);
-    setIsPasswordValid(validatePassword(newPassword));
-    setPasswordMatch(checkPasswordMatch(newPassword, confirmPassword));
-  };
-
-  const handleConfirmPasswordChange = (e) => {
-    const newConfirmPassword = e.target.value;
-    setConfirmPassword(newConfirmPassword);
-    setPasswordMatch(checkPasswordMatch(password, newConfirmPassword));
-  };
-
-  const years = Array.from(
-    { length: 40 },
-    (value, i) => new Date().getFullYear() - i
-  );
-
-  const handleYearChange = (e) => setSelectedYear(e.target.value);
-
-  // чтобы привести в соответсвии виртуальный dom к реальному дому
   const handleReset = () => {
     setName('');
     setEmail('');
@@ -84,18 +98,30 @@ function RegForm() {
     setIsPasswordValid(true);
     setConfirmPassword('');
     setSelectedYear('');
+    setRequiredFieldsError(false); 
   };
 
   return (
     <div className="section">
       <h1>Форма регистрации</h1>
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Имя" onChange={handleNameChange} />
-        <input type="email" placeholder="email" onChange={handleEmailChange} />
+        <input
+          type="text"
+          placeholder="Имя"
+          onChange={handleNameChange}
+          className={requiredFieldsError && !name ? 'error' : ''}
+        />
+        <input
+          type="email"
+          placeholder="email"
+          onChange={handleEmailChange}
+          className={requiredFieldsError && !email ? 'error' : ''}
+        />
         <input
           type="password"
           placeholder="Пароль"
           onChange={handlePasswordChange}
+          className={requiredFieldsError && !password ? 'error' : ''}
         />
         {!isPasswordValid && (
           <div className="error-message">
@@ -114,15 +140,28 @@ function RegForm() {
           value={confirmPassword}
           onChange={handleConfirmPasswordChange}
           style={{ color: passwordMatch ? 'green' : 'red' }}
+          className={
+            requiredFieldsError && !confirmPassword
+              ? 'error'
+              : passwordMatch
+              ? ''
+              : 'error'
+          }
         />
-        <select value={selectedYear} onChange={handleYearChange}>
+
+        <select
+          value={selectedYear}
+          onChange={handleYearChange}
+          className={requiredFieldsError && !selectedYear ? 'error' : ''}
+        >
           <option value="">Дата окончания учебного заведения:</option>
           {years.map((year) => (
-            <option value={year} key={year.toString()}>
+            <option key={year.toString()} value={year}>
               {year}
             </option>
           ))}
         </select>
+
         {requiredFieldsError && (
           <div className="error-message">Проверьте заполнение полей формы</div>
         )}
