@@ -1,151 +1,216 @@
-import { useEffect, useState } from 'react';
-const API_URL =
-  'https://64a72153096b3f0fcc811a0c.mockapi.io/vitaliy_galata/collection';
+import React, { useEffect, useMemo, useState } from 'react';
 
-const HomePage = () => {
-  const [comments, setComments] = useState([]);
-  const [error, setError] = useState('');
-  const [newCommentText, setNewCommentText] = useState('');
-  const [editText, setEditText] = useState('');
-  const [editingId, setEditingId] = useState(null);
+// !!! Укажи базовый URL своего API (без хвоста /api/v1 если он уже внизу)
+const API_BASE = 'https://frontend-test-assignment-api.abz.agency/api/v1';
 
+export default function HomePafe() {
+  const [positions, setPositions] = useState([]); // [{id, name}]
+  const [loadingPositions, setLoadingPositions] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [msg, setMsg] = useState('');
+
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    phone: '+380',
+    position_id: '',
+    photo: null, // File
+  });
+
+  // --- загрузка позиций ---
   useEffect(() => {
-    GET();
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_BASE}/positions`);
+        const data = await res.json();
+        if (!cancelled) {
+          setPositions(Array.isArray(data.positions) ? data.positions : []);
+        }
+      } catch (e) {
+        if (!cancelled) setMsg('Не удалось загрузить список позиций.');
+      } finally {
+        if (!cancelled) setLoadingPositions(false);
+      }
+    })();
+    return () => (cancelled = true);
   }, []);
 
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError('');
-      }, 3000);
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    setForm((s) => ({ ...s, [name]: files ? files[0] : value }));
+  };
 
-      return () => clearTimeout(timer);
+  // Базовые проверки на клиенте (мин длина имени, формат телефона/почты и JPEG)
+  const validationError = useMemo(() => {
+    if (form.name.trim().length < 2 || form.name.trim().length > 60)
+      return 'Имя должно быть 2–60 символов.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      return 'Некорректный email.';
+    if (!/^\+380\d{9}$/.test(form.phone))
+      return 'Телефон должен начинаться с +380 и содержать 12 цифр всего.';
+    if (!form.position_id) return 'Выберите позицию.';
+    if (!form.photo) return 'Загрузите фото.';
+    if (form.photo && !/jpe?g$/i.test(form.photo.name))
+      return 'Фото должно быть в формате .jpg/.jpeg.';
+    if (form.photo && form.photo.size > 5 * 1024 * 1024)
+      return 'Размер фото не должен превышать 5MB.';
+    return '';
+  }, [form]);
+
+  // Доп.проверка минимальных размеров 70x70
+  const checkImageSize = (file) =>
+    new Promise((resolve) => {
+      if (!file) return resolve(true);
+      const img = new Image();
+      img.onload = () => resolve(img.width >= 70 && img.height >= 70);
+      img.onerror = () => resolve(false);
+      img.src = URL.createObjectURL(file);
+    });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMsg('');
+
+    if (validationError) {
+      setMsg(validationError);
+      return;
     }
-  }, [error]);
 
-  async function GET() {
-    try {
-      const response = await fetch(API_URL);
-      if (!response.ok) throw new Error('Failed to fetch comments');
-      const comments = await response.json();
-      setComments(comments);
-      setError('');
-    } catch (error) {
-      setError(error.message);
+    if (!(await checkImageSize(form.photo))) {
+      setMsg('Минимальный размер фото — 70x70 px.');
+      return;
     }
-  }
 
-  async function POST(event) {
-    event.preventDefault();
+    setSubmitting(true);
     try {
-      const response = await fetch(API_URL, {
+      // 1) получаем одноразовый токен
+      const tRes = await fetch(`${API_BASE}/token`, { method: 'POST' });
+      const tData = await tRes.json();
+      if (!tRes.ok || !tData?.token) {
+        setMsg('Не удалось получить токен для регистрации.');
+        setSubmitting(false);
+        return;
+      }
+
+      // 2) собираем multipart/form-data
+      const body = new FormData();
+      body.append('name', form.name.trim());
+      body.append('email', form.email.trim());
+      body.append('phone', form.phone.trim());
+      body.append('position_id', String(form.position_id));
+      body.append('photo', form.photo);
+
+      // 3) регистрация
+      const uRes = await fetch(`${API_BASE}/users`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: newCommentText }),
+        headers: { Token: tData.token }, // важно: именно Token
+        body,
       });
-      if (!response.ok) throw new Error('Failed to create comment');
-      setNewCommentText('');
-      setError('');
-      GET();
-    } catch (error) {
-      setError(error.message);
-    }
-  }
-  async function PATCH(id) {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: editText }),
-      });
-      if (!response.ok) throw new Error('Failed to update comment');
-      setError('');
-      setEditText('');
-      setEditingId(null);
-      GET();
-    } catch (error) {
-      setError(error.message);
-    }
-  }
 
-  async function DELETE(id) {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete comment');
-      GET();
-      setError('');
-    } catch (error) {
-      setError(error.message);
+      const uData = await uRes.json();
+
+      if (uRes.status === 201 && uData?.success) {
+        setMsg('✅ Пользователь успешно зарегистрирован.');
+        // при необходимости — очистить форму
+        setForm({
+          name: '',
+          email: '',
+          phone: '+380',
+          position_id: '',
+          photo: null,
+        });
+      } else if (uRes.status === 409) {
+        setMsg('Пользователь с таким email или телефоном уже существует.');
+      } else if (uRes.status === 401) {
+        setMsg('Токен просрочен. Попробуйте отправить снова.');
+      } else if (uRes.status === 422) {
+        setMsg(uData?.message || 'Ошибка валидации данных.');
+      } else {
+        setMsg(uData?.message || 'Неизвестная ошибка при регистрации.');
+      }
+    } catch (err) {
+      setMsg('Ошибка сети: ' + err.message);
+    } finally {
+      setSubmitting(false);
     }
-  }
+  };
 
   return (
-    <div className="container m-auto mt-5 p-5">
-      <h2 className="text-xl font-bold mb-4">Комментарии</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <ul className="mb-6">
-        {comments.map((comment) => (
-          <li key={comment.id} className="mb-2 p-2 border rounded">
-            {editingId === comment.id ? (
-              <div className="flex gap-2">
-                <input
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  className="border p-1 flex-1"
-                />
-                <button
-                  onClick={() => PATCH(comment.id)}
-                  className="bg-green-500 text-white px-3 py-1 rounded cursor-pointer"
-                >
-                  Сохранить
-                </button>
-              </div>
-            ) : (
-              <div className="flex justify-between items-center">
-                <span>{comment.text}</span>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => {
-                      setEditingId(comment.id);
-                      setEditText(comment.text);
-                    }}
-                    className="bg-yellow-500 text-white px-3 py-1 rounded text-sm cursor-pointer"
-                  >
-                    Изменить
-                  </button>
-                  <button
-                    onClick={() => DELETE(comment.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded text-sm cursor-pointer"
-                  >
-                    Удалить
-                  </button>
-                </div>
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
-      <h2>Добавить комментарий</h2>
-      <form onSubmit={POST} className="flex gap-2">
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: 'grid', gap: 12, maxWidth: 420 }}
+    >
+      <label>
+        Имя
         <input
-          type="text"
-          placeholder="Ваш текст"
-          value={newCommentText}
-          className="border p-2 flex-1"
-          onChange={(e) => setNewCommentText(e.target.value)}
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          minLength={2}
+          maxLength={60}
           required
         />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer"
-        >
-          Добавить комментарий
-        </button>
-      </form>
-    </div>
-  );
-};
+      </label>
 
-export default HomePage;
+      <label>
+        Email
+        <input
+          name="email"
+          type="email"
+          value={form.email}
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <label>
+        Телефон (+380XXXXXXXXX)
+        <input
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+          placeholder="+380XXXXXXXXX"
+          required
+        />
+      </label>
+
+      <label>
+        Позиция
+        <select
+          name="position_id"
+          value={form.position_id}
+          onChange={handleChange}
+          disabled={loadingPositions}
+          required
+        >
+          <option value="" disabled>
+            {loadingPositions ? 'Загрузка...' : 'Выберите позицию'}
+          </option>
+          {positions.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label>
+        Фото (jpg/jpeg, ≤5MB, ≥70×70)
+        <input
+          name="photo"
+          type="file"
+          accept="image/jpeg,image/jpg"
+          onChange={handleChange}
+          required
+        />
+      </label>
+
+      <button type="submit" disabled={submitting}>
+        {submitting ? 'Отправка...' : 'Зарегистрироваться'}
+      </button>
+
+      {msg && <div role="alert">{msg}</div>}
+    </form>
+  );
+}
