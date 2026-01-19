@@ -1,6 +1,5 @@
 import UserDetails from '../UserDetails/UserDetails';
 
-//function UserInfo({ user }) {
 function UserInfo() {
   return (
     <div>

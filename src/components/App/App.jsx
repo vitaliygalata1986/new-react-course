@@ -1,30 +1,17 @@
-import { HomePage } from '../../pages/HomePage';
+import Header from '../Header/Header';
+import { UserContext } from '../../contexts/UserContext';
 
 function App() {
+  const user = {
+    name: 'Иван Иванов',
+    age: 30,
+    email: 'vitaliy@gmail.com',
+  };
   return (
-    <main>
-      <HomePage />
-    </main>
+    <UserContext.Provider value={user}>
+      <Header user={user} />
+    </UserContext.Provider>
   );
 }
 
 export default App;
-
-/*
-Начальные значения:
-  count = 0
-  number = 0
-  countEffect = 0
-
-  1) Первый рендер (mount)
-     Компонент отрендерился с number = 0.
-  
-  После этого выполняются эффекты:
-  Эффект в HomePage с [number] всегда выполняется на mount, даже если number ещё не менялся:
-  
-  useEffect(() => {
-    setCountEffect(countEffect + 1);
-  }, [number]);
-
-  → countEffect становится 1
-*/
