@@ -1,14 +1,21 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
+import { useState } from 'react';
 
-export const UserContext = createContext(null); // если не передать значение, то будет undefined
-// createContext - создает контекст(распространяет данные, которые мы в него передаем)
+export const UserContext = createContext(null);
 
-export function useUserContext() {
-  const user = useContext(UserContext); // получаем значение user из контекста
+export function UseProvider({ children }) {
+  const [user, setUser] = useState({
+    name: 'Vitaliy',
+    email: 'vitos@gmail.com',
+  });
 
-  if (!user) {
-    throw new Error('Данные пользоваетля не были получены');
-  }
+  const updateUser = (newUser) => {
+    setUser(newUser);
+  };
 
-  return user;
+  return (
+    <UserContext.Provider value={{ user, updateUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 }
