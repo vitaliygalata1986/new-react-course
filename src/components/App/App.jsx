@@ -1,48 +1,26 @@
-import LoginForm from '../LoginForm/LoginForm';
-import RegistrForm from '../Registration/Registration';
-import { ProfileForm } from '../ProfileForm/ProfileForm';
-import { useForm } from '../../customHoks/useForm';
+import { useLocalStorage } from '../../customHoks/useLocalStorage';
+import Settings from '../Settings/Settings';
 
 function App() {
-  const loginData = useForm({});
-  const registerData = useForm({});
-  const profileData = useForm({});
-
-  // console.log(loginData); // {formData: {…}, handleChange: ƒ} - данные для логина
-
-  const handleSubmit = (e, formType) => {
-    e.preventDefault();
-    if (formType === 'login') {
-      console.log('Login Data:', loginData.formData);
-    } else if (formType === 'register') {
-      console.log('Register Data:', registerData.formData);
-    } else formType === '';
-    {
-      console.log('Иные данные', profileData.formData);
-    }
-  };
+  const [name, handleSetName, handleRemoveName] = useLocalStorage(
+    'name',
+    'Гость',
+  ); 
 
   return (
-    <>
-      <h1>Login</h1>
-      <LoginForm
-        {...loginData}
-        handleSubmit={(e) => handleSubmit(e, 'login')}
+    <div>
+      <h1>Привет, {name}! </h1>
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => handleSetName(e.target.value)}
+        placeholder="Введите имя"
       />
-      <h2>Registration</h2>
-      <RegistrForm
-        {...registerData}
-        handleSubmit={(e) => handleSubmit(e, 'register')}
-      />
-      <p>---------------</p>
-      <ProfileForm
-        {...profileData}
-        handleSubmit={(e) => handleSubmit(e, 'profile')}
-      />
-    </>
+      <button onClick={handleRemoveName}>Очистить имя</button>
+
+      <Settings />
+    </div>
   );
 }
 
 export default App;
-
-// https://www.youtube.com/watch?v=5FVkpOwipuI&t=1s 8-10
